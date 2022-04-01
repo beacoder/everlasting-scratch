@@ -1,4 +1,4 @@
-;;; everlasting-scratch.el --- The scratch that lasts forever -*- lexical-binding: t; -*-
+;;; everlasting-scratch.el --- The *scratch* that lasts forever -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2022 Huming Chen
 

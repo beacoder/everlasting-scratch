@@ -1,6 +1,9 @@
 # everlasting-scratch
 The scratch buffer that lasts forever.
 
+[[MIT licensed][file:https://img.shields.io/badge/license-MIT-blue.svg]]
+[[http://melpa.org/#/stock-tracker][file:http://melpa.org/packages/stock-tracker-badge.svg]]
+[[996.icu][file:https://img.shields.io/badge/link-996.icu-red.svg]]
 
 # Summary
 This package provides a global minor mode `everlasting-scratch-mode'

@@ -15,3 +15,7 @@ the *scratch* could survive manual kill and emacs restart (with help of desktop.
 ```lisp
     (add-hook 'after-init-hook 'everlasting-scratch-mode)
 ```
+
+# License
+
+[[file:LICENSE][MIT LICENSE]]. Copyright (c) 2022 Huming Chen <chenhuming@gmail.com>

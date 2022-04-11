@@ -1,5 +1,6 @@
 # everlasting-scratch
 
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](COPYING.md)
 [![MELPA](https://melpa.org/packages/everlasting-scratch-badge.svg)](https://melpa.org/#/everlasting-scratch)
 
 The scratch buffer that lasts forever.

@@ -1,6 +1,8 @@
 # everlasting-scratch
 The scratch buffer that lasts forever.
 
+[![MELPA](https://melpa.org/packages/everlasting-scratch-badge.svg)](https://melpa.org/#/everlasting-scratch)
+
 # Summary
 This package provides a global minor mode `everlasting-scratch-mode'
 that causes the *scratch* to respawn after it's killed and with content restored,

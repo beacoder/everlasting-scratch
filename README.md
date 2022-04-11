@@ -1,7 +1,8 @@
 # everlasting-scratch
-The scratch buffer that lasts forever.
 
 [![MELPA](https://melpa.org/packages/everlasting-scratch-badge.svg)](https://melpa.org/#/everlasting-scratch)
+
+The scratch buffer that lasts forever.
 
 # Summary
 This package provides a global minor mode `everlasting-scratch-mode'

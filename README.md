@@ -2,7 +2,7 @@
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](COPYING.md)
 [![MELPA](https://melpa.org/packages/everlasting-scratch-badge.svg)](https://melpa.org/#/everlasting-scratch)
-[![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)]
+[[996.icu][file:https://img.shields.io/badge/link-996.icu-red.svg]]
 
 The scratch buffer that lasts forever.
 

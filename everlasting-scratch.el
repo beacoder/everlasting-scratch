@@ -4,7 +4,7 @@
 
 ;; Author: Huming Chen <chenhuming@gmail.com>
 ;; URL: https://github.com/beacoder/everlasting-scratch
-;; Version: 0.1
+;; Version: 0.1.0
 ;; Created: 2022-04-01
 ;; Keywords: convenience, tool
 ;; Package-Requires: ((emacs "25.1"))
@@ -86,7 +86,7 @@
 Manually restore scratch content,
 e.g: invoking after `desktop-change-dir'."
   (interactive)
-  (with-temp-message "*scratch* restored "
+  (with-temp-message "*scratch* restored"
     (when (get-buffer "*scratch*")
       (with-current-buffer "*scratch*"
         (read-only-mode -1)

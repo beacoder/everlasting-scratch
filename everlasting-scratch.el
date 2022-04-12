@@ -82,18 +82,19 @@
 ;;;###autoload
 (defun everlasting-scratch-restore ()
   "Restore *scratch* buffer content.
-
 Manually restore scratch content,
 e.g: invoking after `desktop-change-dir'."
   (interactive)
-  (when (get-buffer "*scratch*")
-    (with-current-buffer "*scratch*"
-      (read-only-mode -1)
-      (erase-buffer)
-      (fundamental-mode)
-      (insert initial-scratch-message)
-      (set-buffer-modified-p nil)
-      (funcall initial-major-mode))))
+  (with-temp-message "*scratch* restored "
+    (when (get-buffer "*scratch*")
+      (with-current-buffer "*scratch*"
+        (read-only-mode -1)
+        (erase-buffer)
+        (fundamental-mode)
+        (insert initial-scratch-message)
+        (set-buffer-modified-p nil)
+        (funcall initial-major-mode)))
+    (sit-for 0.5)))
 
 
 ;;;###autoload

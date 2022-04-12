@@ -94,7 +94,8 @@ e.g: invoking after `desktop-change-dir'."
         (fundamental-mode)
         (insert initial-scratch-message)
         (set-buffer-modified-p nil)
-        (funcall initial-major-mode)))
+        (funcall initial-major-mode))
+      (switch-to-buffer "*scratch*"))
     (sit-for 0.5)))
 
 

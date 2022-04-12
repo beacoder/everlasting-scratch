@@ -82,6 +82,7 @@
 ;;;###autoload
 (defun everlasting-scratch-restore ()
   "Restore *scratch* buffer content.
+
 Manually restore scratch content,
 e.g: invoking after `desktop-change-dir'."
   (interactive)

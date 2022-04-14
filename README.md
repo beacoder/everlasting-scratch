@@ -20,6 +20,12 @@ the *scratch* could survive manual kill and emacs restart (with help of desktop.
     (add-hook 'after-init-hook 'everlasting-scratch-mode)
 ```
 
+# Features
+
+- [x] Automatically respawn *scratch*.
+- [x] Content will be restored together with *scratch*.
+- [x] Content could survive emacs restart.
+
 # License
 
 [LICENSE](LICENSE). Copyright (c) 2022 Huming Chen <chenhuming@gmail.com>

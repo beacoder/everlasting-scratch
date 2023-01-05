@@ -29,4 +29,4 @@ the *scratch* could survive manual kill and emacs restart (with help of desktop.
 
 # License
 
-[LICENSE](LICENSE). Copyright (c) 2022 Huming Chen <chenhuming@gmail.com>
+[LICENSE](LICENSE). Copyright (c) 2022-2023 Huming Chen <chenhuming@gmail.com>

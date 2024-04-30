@@ -1,6 +1,6 @@
 ;;; everlasting-scratch.el --- The *scratch* that lasts forever -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2022-2023 Huming Chen
+;; Copyright (C) 2022-2024 Huming Chen
 
 ;; Author: Huming Chen <chenhuming@gmail.com>
 ;; URL: https://github.com/beacoder/everlasting-scratch

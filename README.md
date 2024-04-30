@@ -1,6 +1,7 @@
 # everlasting-scratch
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](COPYING.md)
+[![Build Status](https://github.com/beacoder/everlasting-scratch/workflows/CI/badge.svg)](https://github.com/beacoder/everlasting-scratch/actions)
 [![MELPA](https://melpa.org/packages/everlasting-scratch-badge.svg)](https://melpa.org/#/everlasting-scratch)
 [![MELPA Stable](https://stable.melpa.org/packages/everlasting-scratch-badge.svg)](https://stable.melpa.org/#/everlasting-scratch)
 [![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)

@@ -51,7 +51,7 @@
   (with-current-buffer (get-buffer-create "*scratch*")
     (with-temp-message ""
       (when (zerop (buffer-size))
-        (insert initial-scratch-message)
+        (insert (decode-coding-string initial-scratch-message 'utf-8))
         (set-buffer-modified-p nil)
         (funcall initial-major-mode)))))
 
@@ -76,7 +76,7 @@
       (with-current-buffer "*scratch*"
         (unless (zerop (buffer-size))
           (setq initial-scratch-message
-                (buffer-substring-no-properties (point-min) (point-max)))))))
+                (encode-coding-string (buffer-substring-no-properties (point-min) (point-max)) 'utf-8))))))
 
 
 ;;;###autoload
@@ -92,7 +92,7 @@ e.g: invoking after `desktop-change-dir'."
         (read-only-mode -1)
         (erase-buffer)
         (fundamental-mode)
-        (insert initial-scratch-message)
+        (insert (decode-coding-string initial-scratch-message 'utf-8))
         (set-buffer-modified-p nil)
         (funcall initial-major-mode))
       (switch-to-buffer "*scratch*"))

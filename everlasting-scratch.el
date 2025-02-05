@@ -36,6 +36,10 @@
 ;;
 ;;  (add-hook 'after-init-hook 'everlasting-scratch-mode)
 
+;;; Change Log:
+;;
+;; 0.1.1 Add sync timer to save *scratch* every 30 secs.
+
 ;;; Code:
 
 (require 'desktop)
@@ -43,6 +47,25 @@
 (defgroup everlasting-scratch nil
   "Respawn scratch buffer when it's killed."
   :group 'convenience)
+
+
+(defvar everlasting-scratch--sync-timer nil
+  "Everlasting-Scratch sync timer.")
+
+
+(defun everlasting-scratch--run-timers ()
+  "Run sync timer to save buffer message every 30 secs."
+  (setq everlasting-scratch--sync-timer
+        (run-with-timer (* 10 3)
+                        (* 10 3)
+                        'everlasting-scratch-save)))
+
+
+(defun everlasting-scratch--cancel-timers ()
+  "Cancel sync timers."
+  (when everlasting-scratch--sync-timer
+    (cancel-timer everlasting-scratch--sync-timer)
+    (setq everlasting-scratch--sync-timer nil)))
 
 
 (defun everlasting-scratch-respawn ()
@@ -72,11 +95,11 @@
 (defun everlasting-scratch-save (&rest _)
   "Save *scratch* buffer content before kill."
 
-  (if (string= (buffer-name (current-buffer)) "*scratch*")
-      (with-current-buffer "*scratch*"
-        (unless (zerop (buffer-size))
-          (setq initial-scratch-message
-                (encode-coding-string (buffer-substring-no-properties (point-min) (point-max)) 'utf-8))))))
+  (when (get-buffer "*scratch*")
+    (with-current-buffer "*scratch*"
+      (unless (zerop (buffer-size))
+        (setq initial-scratch-message
+              (encode-coding-string (buffer-substring-no-properties (point-min) (point-max)) 'utf-8))))))
 
 
 ;;;###autoload
@@ -116,13 +139,18 @@ e.g: invoking after `desktop-change-dir'."
         (advice-add #'save-buffers-kill-emacs :before #'everlasting-scratch-save)
         ;; save *scratch* to desktop file
         (setq desktop-globals-to-save
-              (add-to-list 'desktop-globals-to-save 'initial-scratch-message)))
+              (add-to-list 'desktop-globals-to-save 'initial-scratch-message))
+        ;; save *scratch* every 30 secs
+        (everlasting-scratch--run-timers))
     ;; restoration
+    (everlasting-scratch--cancel-timers)
     (setq desktop-globals-to-save
           (delete 'initial-scratch-message desktop-globals-to-save))
     (advice-remove #'save-buffers-kill-emacs #'everlasting-scratch-save)
     (advice-remove #'everlasting-scratch-kill #'everlasting-scratch-save)
-    (remove-hook 'kill-buffer-query-functions #'everlasting-scratch-kill)))
+    (remove-hook 'kill-buffer-query-functions #'everlasting-scratch-kill))
+  ;; cleanup timers
+  (add-hook 'kill-buffer-hook #'everlasting-scratch--cancel-timers))
 
 
 (provide 'everlasting-scratch)

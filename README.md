@@ -27,6 +27,7 @@ the *scratch* could survive manual kill and emacs restart (with help of desktop.
 - [x] Automatically respawn *scratch*.
 - [x] Content will be restored together with *scratch*.
 - [x] Content could survive emacs restart.
+- [x] Content will be saved automatically every 30s.
 
 # License
 

@@ -76,7 +76,8 @@
       (when (zerop (buffer-size))
         (insert (decode-coding-string initial-scratch-message 'utf-8))
         (set-buffer-modified-p nil)
-        (funcall initial-major-mode)))))
+        (funcall initial-major-mode)
+        (everlasting-scratch-mode)))))
 
 
 (defun everlasting-scratch-kill ()
@@ -117,7 +118,8 @@ e.g: invoking after `desktop-change-dir'."
         (fundamental-mode)
         (insert (decode-coding-string initial-scratch-message 'utf-8))
         (set-buffer-modified-p nil)
-        (funcall initial-major-mode))
+        (funcall initial-major-mode)
+        (everlasting-scratch-mode))
       (switch-to-buffer "*scratch*"))
     (sit-for 0.5)))
 
@@ -141,6 +143,7 @@ e.g: invoking after `desktop-change-dir'."
         (setq desktop-globals-to-save
               (add-to-list 'desktop-globals-to-save 'initial-scratch-message))
         ;; save *scratch* every 30 secs
+        (everlasting-scratch--cancel-timers)
         (everlasting-scratch--run-timers))
     ;; restoration
     (everlasting-scratch--cancel-timers)
@@ -148,9 +151,7 @@ e.g: invoking after `desktop-change-dir'."
           (delete 'initial-scratch-message desktop-globals-to-save))
     (advice-remove #'save-buffers-kill-emacs #'everlasting-scratch-save)
     (advice-remove #'everlasting-scratch-kill #'everlasting-scratch-save)
-    (remove-hook 'kill-buffer-query-functions #'everlasting-scratch-kill))
-  ;; cleanup timers
-  (add-hook 'kill-buffer-hook #'everlasting-scratch--cancel-timers))
+    (remove-hook 'kill-buffer-query-functions #'everlasting-scratch-kill)))
 
 
 (provide 'everlasting-scratch)

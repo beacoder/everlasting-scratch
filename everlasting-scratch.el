@@ -1,13 +1,14 @@
 ;;; everlasting-scratch.el --- The *scratch* that lasts forever -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2022-2025 Huming Chen
+;; Copyright (C) 2022-2026 Huming Chen
 
 ;; Author: Huming Chen <chenhuming@gmail.com>
 ;; URL: https://github.com/beacoder/everlasting-scratch
-;; Version: 0.1.1
+;; Package-Version: 20250206.628
+;; Package-Revision: a990e8d2261e
 ;; Created: 2022-04-01
 ;; Keywords: convenience, tool
-;; Package-Requires: ((emacs "25.1"))
+;; Package-Requires: ((emacs "26.1"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -49,16 +50,22 @@
   :group 'convenience)
 
 
+(defcustom everlasting-scratch-save-interval 30
+  "Interval in seconds between automatic saves of *scratch*."
+  :type 'integer
+  :group 'everlasting-scratch)
+
+
 (defvar everlasting-scratch--sync-timer nil
   "Everlasting-Scratch sync timer.")
 
 
 (defun everlasting-scratch--run-timers ()
-  "Run sync timer to save buffer message every 30 secs."
+  "Run sync timer to save buffer content periodically."
   (setq everlasting-scratch--sync-timer
-        (run-with-timer (* 10 3)
-                        (* 10 3)
-                        'everlasting-scratch-save)))
+        (run-with-timer everlasting-scratch-save-interval
+                        everlasting-scratch-save-interval
+                        #'everlasting-scratch-save)))
 
 
 (defun everlasting-scratch--cancel-timers ()
@@ -70,37 +77,34 @@
 
 (defun everlasting-scratch-respawn ()
   "Create *scratch* buffer if it doesn't exist."
-
   (with-current-buffer (get-buffer-create "*scratch*")
+    ;; Suppress messages during respawn to avoid noise in the echo area.
     (with-temp-message ""
       (when (zerop (buffer-size))
-        (insert (decode-coding-string initial-scratch-message 'utf-8))
+        (insert initial-scratch-message)
         (set-buffer-modified-p nil)
-        (funcall initial-major-mode)
-        (everlasting-scratch-mode)))))
+        (funcall initial-major-mode)))))
 
 
 (defun everlasting-scratch-kill ()
   "Add to `kill-buffer-query-functions' to respawn scratch when it is killed."
-
   (if (string= (buffer-name (current-buffer)) "*scratch*")
       (let ((kill-buffer-query-functions kill-buffer-query-functions))
         (remove-hook 'kill-buffer-query-functions #'everlasting-scratch-kill)
         (kill-buffer "*scratch*")
         (everlasting-scratch-respawn)
         nil)
-    t ;; not scratch
-    ))
+    t)) ;; not scratch
 
 
 (defun everlasting-scratch-save (&rest _)
-  "Save *scratch* buffer content before kill."
-
-  (when (get-buffer "*scratch*")
-    (with-current-buffer "*scratch*"
+  "Save *scratch* buffer content to `initial-scratch-message'.
+Accepts &rest args for compatibility as :before advice."
+  (when-let ((buf (get-buffer "*scratch*")))
+    (with-current-buffer buf
       (unless (zerop (buffer-size))
         (setq initial-scratch-message
-              (encode-coding-string (buffer-substring-no-properties (point-min) (point-max)) 'utf-8))))))
+              (buffer-substring-no-properties (point-min) (point-max)))))))
 
 
 ;;;###autoload
@@ -110,18 +114,17 @@
 Manually restore scratch content,
 e.g: invoking after `desktop-change-dir'."
   (interactive)
-  (with-temp-message "*scratch* restored"
-    (when (get-buffer "*scratch*")
-      (with-current-buffer "*scratch*"
-        (read-only-mode -1)
-        (erase-buffer)
-        (fundamental-mode)
-        (insert (decode-coding-string initial-scratch-message 'utf-8))
-        (set-buffer-modified-p nil)
-        (funcall initial-major-mode)
-        (everlasting-scratch-mode))
-      (switch-to-buffer "*scratch*"))
-    (sit-for 0.5)))
+  (when (get-buffer "*scratch*")
+    (with-current-buffer "*scratch*"
+      (read-only-mode -1)
+      (erase-buffer)
+      (fundamental-mode)
+      (insert initial-scratch-message)
+      (set-buffer-modified-p nil)
+      (funcall initial-major-mode))
+    (when (called-interactively-p 'any)
+      (switch-to-buffer "*scratch*")
+      (message "*scratch* restored"))))
 
 
 ;;;###autoload
@@ -135,20 +138,21 @@ e.g: invoking after `desktop-change-dir'."
   (if everlasting-scratch-mode
       (progn
         (add-hook 'kill-buffer-query-functions #'everlasting-scratch-kill)
+        (add-hook 'kill-emacs-hook #'everlasting-scratch-save)
         ;; survive manual kill
         (advice-add #'everlasting-scratch-kill :before #'everlasting-scratch-save)
-        ;; survive emacs exit
+        ;; survive emacs exit via save-buffers-kill-emacs
         (advice-add #'save-buffers-kill-emacs :before #'everlasting-scratch-save)
         ;; save *scratch* to desktop file
-        (setq desktop-globals-to-save
-              (add-to-list 'desktop-globals-to-save 'initial-scratch-message))
-        ;; save *scratch* every 30 secs
+        (add-to-list 'desktop-globals-to-save 'initial-scratch-message)
+        ;; save *scratch* periodically
         (everlasting-scratch--cancel-timers)
         (everlasting-scratch--run-timers))
-    ;; restoration
+    ;; deactivation
     (everlasting-scratch--cancel-timers)
     (setq desktop-globals-to-save
           (delete 'initial-scratch-message desktop-globals-to-save))
+    (remove-hook 'kill-emacs-hook #'everlasting-scratch-save)
     (advice-remove #'save-buffers-kill-emacs #'everlasting-scratch-save)
     (advice-remove #'everlasting-scratch-kill #'everlasting-scratch-save)
     (remove-hook 'kill-buffer-query-functions #'everlasting-scratch-kill)))

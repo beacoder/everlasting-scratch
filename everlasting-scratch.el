@@ -4,8 +4,7 @@
 
 ;; Author: Huming Chen <chenhuming@gmail.com>
 ;; URL: https://github.com/beacoder/everlasting-scratch
-;; Package-Version: 20250206.628
-;; Package-Revision: a990e8d2261e
+;; Version: 0.1.1
 ;; Created: 2022-04-01
 ;; Keywords: convenience, tool
 ;; Package-Requires: ((emacs "26.1"))
